@@ -5,11 +5,16 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
 	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 "=====================================
-
+set helplang=cn "设置中文帮助
+set history=500 "保留历史记录
+set backspace=2 "设置退格键可用
+ " 开启语法高亮功能
+syntax enable
 syntax on
 set number
 set relativenumber
 set cursorline "下划线
+set cursorcolumn "高亮显示列"
 set wrap
 set showcmd
 set wildmenu "命令补全
@@ -135,10 +140,15 @@ Plug 'connorholyday/vim-snazzy' "配色
 " File navigation
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 
+Plug 'nathanaelkane/vim-indent-guides' "可视化缩进显示 开关<空格+ig>
+
 " Auto Complete 自动补全
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-Plug 'mhinz/vim-startify' "起始页
+"对齐插件 格式符：[对齐方式[此方式后添加的空格数量]]，对齐方式 左l、右r、中c。需要与前面用 / 隔开。
+Plug 'godlygeek/tabular'
+
+Plug 'mhinz/vim-startify' "起始页菜单目录
 Plug 'jiangmiao/auto-pairs' "括号补全
 
 "代码块
@@ -146,13 +156,93 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 
+"批量注释
+Plug 'scrooloose/nerdcommenter' "<空格+cx注释（反注释），空格+cc住，空格+cu取消注释>
+
+"通过类的声明，自动完成类的实现
+"Plug 'derekwyatt/vim-protodef'
+
+".h文件与.cpp文件的切换
+Plug 'derekwyatt/vim-fswitch'
 
 
 
+Plug 'majutsushi/tagbar' "函数列表
 call plug#end()
 
 let g:SnazzyTransparent = 1
 color snazzy
+
+"===
+"===函数列表相关设置tagbar
+"===
+" 设置 tagbar 子窗口的位置出现在主编辑区的左边 
+let tagbar_left=0 
+" 设置显示／隐藏标签列表子窗口的快捷键。速记：identifier list by tag
+nnoremap <F8> :TagbarToggle<CR> 
+" 设置标签子窗口的宽度 
+let tagbar_width=32 
+" tagbar 子窗口中不显示冗余帮助信息 
+let g:tagbar_compact=1
+" 设置 ctags 对哪些代码标识符生成标签
+let g:tagbar_type_cpp = {
+    \ 'kinds' : [
+         \ 'c:classes:0:1',
+         \ 'd:macros:0:1',
+         \ 'e:enumerators:0:0', 
+         \ 'f:functions:0:1',
+         \ 'g:enumeration:0:1',
+         \ 'l:local:0:1',
+         \ 'm:members:0:1',
+         \ 'n:namespaces:0:1',
+         \ 'p:functions_prototypes:0:1',
+         \ 's:structs:0:1',
+         \ 't:typedefs:0:1',
+         \ 'u:unions:0:1',
+         \ 'v:global:0:1',
+         \ 'x:external:0:1'
+     \ ],
+     \ 'sro'        : '::',
+     \ 'kind2scope' : {
+         \ 'g' : 'enum',
+         \ 'n' : 'namespace',
+         \ 'c' : 'class',
+         \ 's' : 'struct',
+         \ 'u' : 'union'
+     \ },
+     \ 'scope2kind' : {
+         \ 'enum'      : 'g',
+         \ 'namespace' : 'n',
+         \ 'class'     : 'c',
+         \ 'struct'    : 's',
+         \ 'union'     : 'u'
+     \ }
+\ }
+
+
+
+"===protodef 设置
+" 设置 pullproto.pl 脚本路径
+let g:protodefprotogetter='~/.config/nvim/plugged/vim-protodef/pullproto.pl'
+let g:disable_protodef_sorting=1 "成员函数的实现与声明顺序一致"
+ 
+"===
+"===可视化缩进设置vim-indent-guides
+"===
+let g:indent_guides_enable_on_vim_startup =1 "随vim启动
+let g:indent_guides_guide_size = 1
+let g:indent_guides_start_level = 2  " 从第二层开始可视化显示缩进
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=white   ctermbg=3
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=lightgrey ctermbg=4
+
+"
+"===
+"===fswitch 开关设置 <空格>+sw 
+"===
+nmap <silent> <Leader>sw :FSHere<CR>
+
+
 
 
 
